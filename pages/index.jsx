@@ -1,26 +1,59 @@
 import Navbar from '@/components/Navbar'
 import Head from 'next/head'
 import Link from 'next/link'
+import { prisma } from '@/lib/prisma'
+import { getServerSession } from 'next-auth'
+import { authOptions } from './api/auth/[...nextauth]'
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ req, res }) {
 	const fetch_categories = await fetch('https://fakestoreapi.com/products/categories')
+	const session = await getServerSession(req, res, authOptions)
+	let carts = []
+
+	if (session) {
+		const cart = await prisma.cart.findFirst({
+			where: {
+				id_user: session.user.id,
+				checked_out: false,
+			},
+			orderBy: {
+				id: 'desc',
+			},
+			select: {
+				items: true,
+			},
+		})
+
+		for (let i = 0; i < cart.items.length; i++) {
+			const fetch_product_detail = await fetch('https://fakestoreapi.com/products/' + cart.items[i].id_product)
+			const product_detail = await fetch_product_detail.json()
+
+			carts.push({
+				id_product: product_detail.id,
+				product_name: product_detail.title,
+				product_price: cart.items[i].price,
+				product_image: product_detail.image,
+			})
+		}
+	}
 
 	if (fetch_categories.ok)
 		return {
 			props: {
 				categories: await fetch_categories.json(),
+				carts,
 			},
 		}
 }
 
-export default function Beranda({ categories }) {
+export default function Beranda({ categories, carts }) {
 	return (
 		<>
-      <Head>
-        <title>L O G O</title>
-      </Head>
+			<Head>
+				<title>L O G O</title>
+			</Head>
 
-			<Navbar links={categories} />
+			<Navbar links={categories} carts={carts} />
 
 			<section class="bg-gray-50">
 				<div class="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
@@ -49,7 +82,7 @@ export default function Beranda({ categories }) {
 
 					<ul class="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-3">
 						<li>
-							<Link href="/category/Men's Clothing" class="group relative block">
+							<Link href="/category/men's clothing" class="group relative block">
 								<img
 									src="https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 									alt=""
@@ -63,7 +96,7 @@ export default function Beranda({ categories }) {
 						</li>
 
 						<li>
-							<Link href="/category/Women's Clothing" class="group relative block">
+							<Link href="/category/women's clothing" class="group relative block">
 								<img
 									src="https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 									alt=""
@@ -77,7 +110,7 @@ export default function Beranda({ categories }) {
 						</li>
 
 						<li class="lg:col-span-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
-							<Link href="/category/Jewelry" class="group relative block">
+							<Link href="/category/jewelry" class="group relative block">
 								<img
 									src="https://images.unsplash.com/photo-1543294001-f7cd5d7fb516?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 									alt=""

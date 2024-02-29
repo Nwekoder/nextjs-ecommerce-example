@@ -7,8 +7,25 @@ import {compare} from 'bcryptjs'
  * @type {AuthOptions}
  */
 export const authOptions = {
+    session: {
+        strategy: 'jwt'
+    },
     pages: {
         signIn: '/login'
+    },
+    callbacks: {
+        async jwt({account, token}) {
+            if(account) {
+                token.id = account.providerAccountId
+            }
+
+            return token
+        },
+        async session({session, token}) {
+            session.user.id = token.id
+            
+            return session
+        }
     },
     providers: [
         CredentialsProvider({
