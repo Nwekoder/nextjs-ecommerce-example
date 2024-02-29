@@ -1,14 +1,13 @@
 import Navbar from '@/components/Navbar'
-import ProductCard from '@/components/ProductCard'
 import Head from 'next/head'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '../../api/auth/[...nextauth]'
+import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
+import { getServerSession } from 'next-auth'
+import { authOptions } from './api/auth/[...nextauth]'
 import Footer from '@/components/Footer'
 
-export async function getServerSideProps({ params, req, res }) {
+export async function getServerSideProps({ req, res }) {
 	const fetch_categories = await fetch('https://fakestoreapi.com/products/categories')
-	const fetch_products = await fetch(`https://fakestoreapi.com/products/category/${params.category.toLowerCase()}`)
 	const session = await getServerSession(req, res, authOptions)
 	let carts = []
 
@@ -39,26 +38,16 @@ export async function getServerSideProps({ params, req, res }) {
 		}
 	}
 
-	let categories
-	let products
-
-	if (fetch_categories.ok) {
-		categories = await fetch_categories.json()
-	}
-	if (fetch_products.ok) {
-		products = await fetch_products.json()
-	}
-
-	return {
-		props: {
-			categories,
-			products,
-			carts,
-		},
-	}
+	if (fetch_categories.ok)
+		return {
+			props: {
+				categories: await fetch_categories.json(),
+				carts,
+			},
+		}
 }
 
-export default function CategoryPage({ categories, products, carts }) {
+export default function Beranda({ categories, carts }) {
 	return (
 		<>
 			<Head>
@@ -66,11 +55,8 @@ export default function CategoryPage({ categories, products, carts }) {
 			</Head>
 
 			<Navbar links={categories} carts={carts} />
-			<div className="grid w-5/6 grid-cols-4 gap-8 mx-auto mt-8 mb-4 min-h-[80vh]">
-				{products.map((product, i) => (
-					<ProductCard key={i} name={product.title} price={product.price} image={product.image} id={product.id} category={product.category} />
-				))}
-			</div>
+            
+            
 
 			<Footer />
 		</>

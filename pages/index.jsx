@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]'
+import Footer from '@/components/Footer'
 
 export async function getServerSideProps({ req, res }) {
 	const fetch_categories = await fetch('https://fakestoreapi.com/products/categories')
@@ -126,17 +127,7 @@ export default function Beranda({ categories, carts }) {
 				</div>
 			</section>
 
-			<footer class="bg-gray-900">
-				<div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
-					<div class="sm:flex sm:items-center sm:justify-between">
-						<div class="flex justify-center text-white sm:justify-start">
-							<span className="text-3xl font-bold tracking-wider">LOGO</span>
-						</div>
-
-						<p class="mt-4 text-center text-sm text-gray-500 lg:mt-0 lg:text-right">Copyright &copy; 2024. All rights reserved.</p>
-					</div>
-				</div>
-			</footer>
+			<Footer />
 		</>
 	)
 }

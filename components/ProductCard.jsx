@@ -4,7 +4,7 @@ export default function ProductCard({id, name, price, image, category}) {
 	const idr = 15722
 
 	return (
-		<Link href={`/product/${category}/${id}`} class="group block border rounded-lg p-4">
+		<Link href={`/product/${category}/${id}`} class="group block border rounded-lg p-4 h-fit">
 			<img
 				src={image}
 				alt=""
