@@ -27,6 +27,10 @@ yarn-error.log*
 
 # local env files
 .env*.local
+seed.js
+dev.db*
+.vscode
+.npm-cache
 
 # vercel
 .vercel
