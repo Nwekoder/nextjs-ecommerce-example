@@ -35,7 +35,7 @@ export default function CategoryPage({categories, products}) {
 			<div className="grid w-5/6 grid-cols-4 gap-8 mx-auto mt-8 mb-4">
                 {
                     products.map((product, i) => (
-                        <ProductCard key={i} name={product.title} price={product.price} image={product.image} id={product.id} />
+                        <ProductCard key={i} name={product.title} price={product.price} image={product.image} id={product.id} category={product.category} />
                     ))
                 }
 			</div>

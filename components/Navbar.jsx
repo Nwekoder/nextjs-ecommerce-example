@@ -1,16 +1,17 @@
 import Link from "next/link";
 import React from "react";
 import { signOut, useSession } from "next-auth/react";
-import {FaUser} from 'react-icons/fa'
+import {FaShoppingCart, FaUser} from 'react-icons/fa'
 
 export default function Navbar({links}) {
     const [openProfile, setOpenProfile] = React.useState(false)
+    const [openCart, setOpenCart] = React.useState(false)
     const session = useSession()
 
   return (
     <nav class="flex items-center sticky top-0 left-0 w-full h-14 bg-white z-[1000] border-b">
         <div className="flex items-center justify-between w-11/12 mx-auto">
-            <span className="text-3xl font-bold tracking-wider text-cyan-800">LOGO</span>
+            <Link href="/" className="text-3xl font-bold tracking-wider text-cyan-800">LOGO</Link>
 
             <div className="flex items-center justify-end gap-1.5">
                 {links.map(l => (
@@ -26,20 +27,34 @@ export default function Navbar({links}) {
                     </>
                 )}
                 {session.status === "authenticated" && (
-                    <div className="relative">
-                        <button type="button" className="flex items-center justify-center w-10 h-10 border rounded-full" onClick={() => setOpenProfile(!openProfile)}>
-                            <FaUser />
-                        </button>
+                    <>
+                        <div className="relative mr-4">
+                            <button type="button" className="flex items-center justify-center w-10 h-10" onClick={() => setOpenCart(!openCart)}>
+                                <FaShoppingCart />
+                            </button>
 
-                        {openProfile && (
-                            <div className="absolute right-0 flex flex-col p-4 mt-4 bg-white border rounded-md w-72 top-full">
-                                <p className="text-sm">Hello,</p>
-                                <h5 className="mb-8 text-lg font-medium">{session.data.user.name}</h5>
+                            {openCart && (
+                                <div className="absolute right-0 flex flex-col p-4 mt-4 bg-white border rounded-md w-72 top-full">
 
-                                <button onClick={signOut} type="button" className="text-sm px-4 text-red-700 py-1.5 rounded-md border border-red-600 transition-[background,_color] hover:text-white hover:bg-red-600">Logout</button>
-                            </div>
-                        )}
-                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="relative">
+                            <button type="button" className="flex items-center justify-center w-10 h-10 border rounded-full" onClick={() => setOpenProfile(!openProfile)}>
+                                <FaUser />
+                            </button>
+
+                            {openProfile && (
+                                <div className="absolute right-0 flex flex-col p-4 mt-4 bg-white border rounded-md w-72 top-full">
+                                    <p className="text-sm">Hello,</p>
+                                    <h5 className="mb-8 text-lg font-medium">{session.data.user.name}</h5>
+
+                                    <button onClick={signOut} type="button" className="text-sm px-4 text-red-700 py-1.5 rounded-md border border-red-600 transition-[background,_color] hover:text-white hover:bg-red-600">Logout</button>
+                                </div>
+                            )}
+                        </div>
+                    </>
                 )}
             </div>
         </div>
