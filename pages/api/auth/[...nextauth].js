@@ -7,6 +7,9 @@ import {compare} from 'bcryptjs'
  * @type {AuthOptions}
  */
 export const authOptions = {
+    pages: {
+        signIn: '/login'
+    },
     providers: [
         CredentialsProvider({
             credentials: [
