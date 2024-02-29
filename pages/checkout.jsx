@@ -10,6 +10,7 @@ export async function getServerSideProps({ req, res }) {
 	const fetch_categories = await fetch('https://fakestoreapi.com/products/categories')
 	const session = await getServerSession(req, res, authOptions)
 	let carts = []
+	let cart_id
 
 	if (session) {
 		const cart = await prisma.cart.findFirst({
@@ -38,13 +39,14 @@ export async function getServerSideProps({ req, res }) {
 					product_image: product_detail.image,
 				})
 			}
+			cart_id = cart.id
 		}
 
 		return {
 			props: {
 				categories: await fetch_categories.json(),
 				carts,
-				id_cart: cart.id,
+				id_cart: cart_id,
 			},
 		}
 	}
@@ -58,8 +60,12 @@ export async function getServerSideProps({ req, res }) {
 }
 
 export default function Beranda({ categories, carts, id_cart }) {
+	const router = useRouter()
+	if(!id_cart) {
+		alert("Keranjang anda masih kosong!")
+		router.push('/')
+	}
 	const subtotal = carts.reduce((prev, cur) => prev + cur.product_price, 0)
-    const router = useRouter()
 
 	async function checkout() {
         const res = await fetch('/api/cart/checkout?id_cart=' + id_cart)
