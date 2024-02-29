@@ -26,16 +26,18 @@ export async function getServerSideProps({ params, req, res }) {
 			},
 		})
 
-		for (let i = 0; i < cart.items.length; i++) {
-			const fetch_product_detail = await fetch('https://fakestoreapi.com/products/' + cart.items[i].id_product)
-			const product_detail = await fetch_product_detail.json()
-
-			carts.push({
-				id_product: product_detail.id,
-				product_name: product_detail.title,
-				product_price: cart.items[i].price,
-				product_image: product_detail.image,
-			})
+		if(cart) {
+			for (let i = 0; i < cart.items.length; i++) {
+				const fetch_product_detail = await fetch('https://fakestoreapi.com/products/' + cart.items[i].id_product)
+				const product_detail = await fetch_product_detail.json()
+	
+				carts.push({
+					id_product: product_detail.id,
+					product_name: product_detail.title,
+					product_price: cart.items[i].price,
+					product_image: product_detail.image,
+				})
+			}
 		}
 	}
 

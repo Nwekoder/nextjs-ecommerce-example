@@ -53,27 +53,32 @@ export default function Navbar({ links, carts }) {
 
 								{openCart && (
 									<div className="absolute right-0 flex flex-col p-4 mt-4 bg-white border rounded-md w-72 top-full">
-										<ul class="space-y-4 max-h-[70vh]">
-                                            {carts.map(cart => (
-                                                <li class="flex items-center gap-4">
-                                                    <img
-                                                        src={cart.product_image}
-                                                        alt=""
-                                                        class="size-16 rounded object-cover"
-                                                    />
+										{carts.length > 0 ? (
+											<>
+												<ul class="space-y-4 max-h-[70vh]">
+													{carts.map((cart) => (
+														<li class="flex items-center gap-4">
+															<img src={cart.product_image} alt="" class="size-16 rounded object-cover" />
 
-                                                    <div>
-                                                        <h3 class="text-sm text-gray-900">{cart.product_name}</h3>
-                                                    </div>
-                                                </li>
-                                            ))}
-										</ul>
+															<div>
+																<h3 class="text-sm text-gray-900">{cart.product_name}</h3>
+															</div>
+														</li>
+													))}
+												</ul>
 
-										<div class="text-center mt-4">
-											<Link href="/checkout" class="block w-full text-sm px-4 text-blue-700 py-1.5 rounded-md border border-blue-600 transition-[background,_color] hover:text-white hover:bg-blue-600">
-												Checkout
-											</Link>
-										</div>
+												<div class="text-center mt-4">
+													<Link
+														href="/checkout"
+														class="block w-full text-sm px-4 text-blue-700 py-1.5 rounded-md border border-blue-600 transition-[background,_color] hover:text-white hover:bg-blue-600"
+													>
+														Checkout
+													</Link>
+												</div>
+											</>
+										) : (
+											<p className='text-center'>Keranjang anda kosong</p>
+										)}
 									</div>
 								)}
 							</div>
