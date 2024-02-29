@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]'
 import Footer from '@/components/Footer'
 import { useRouter } from 'next/router'
+import React from 'react'
 
 export async function getServerSideProps({ req, res }) {
 	const fetch_categories = await fetch('https://fakestoreapi.com/products/categories')
@@ -59,12 +60,16 @@ export async function getServerSideProps({ req, res }) {
     }
 }
 
-export default function Beranda({ categories, carts, id_cart }) {
+export default function Checkout({ categories, carts, id_cart }) {
 	const router = useRouter()
-	if(!id_cart) {
-		alert("Keranjang anda masih kosong!")
-		router.push('/')
-	}
+	
+	React.useEffect(() => {
+		if(!id_cart) {
+			alert("Keranjang anda masih kosong!")
+			router.push('/')
+		}
+	}, [])
+
 	const subtotal = carts.reduce((prev, cur) => prev + cur.product_price, 0)
 
 	async function checkout() {
